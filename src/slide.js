@@ -28,7 +28,7 @@ function createText(text, font, color) {
 
 class Slide {
 
-  constructor({bullets = ['Point one'], font = 'fonts/helvetiker_bold.typeface.json', color = 0xff2222 }) {
+  constructor({bullets = ['Bullet one'], font = 'fonts/helvetiker_bold.typeface.json', color = 0xff2222 }) {
     this.bullets = bullets;
     this.fontName = font;
     this.color = color;

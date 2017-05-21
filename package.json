@@ -1,8 +1,9 @@
 {
   "name": "three-ppt",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "A JavaScript library based on Three.js to create 3D presentations",
   "main": "index.js",
+  "repository": "https://github.com/kaimys/3d-slides",
   "scripts": {
     "build": "browserify src/main.js -o public/main.js",
     "watch": "watchify src/main.js -o public/main.js",
@@ -11,6 +12,7 @@
   "author": "Kai Mysliwiec",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.4.0",
     "browserify": "^14.3.0",
     "express": "^4.15.2",
     "three": "^0.85.2",

@@ -1,29 +1,35 @@
-var THREE = require('three');
-var TWEEN = require('tween');
+const THREE = require('three');
+const TWEEN = require('tween');
+const async = require('async');
 
 class Presentation {
 
-  constructor({ fogColor = 0x333333 }) {
+  constructor(width, height, { fogColor = 0x333333 }) {
+    this.slides = [];
     this.fogColor = fogColor;
-    this.scene = new THREE.Scene();
-  }
 
-  init(callback) {
     // Renderer
     this.renderer = new THREE.WebGLRenderer();
-    this.renderer.setSize( window.innerWidth, window.innerHeight );
+    this.renderer.setSize(width, height);
     this.renderer.setClearColor( this.fogColor );
-    document.body.appendChild( this.renderer.domElement );
 
     // Camera
-    this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    this.camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
     this.camera.position.set( 0, 200, 300 );
     this.cameraTarget = new THREE.Vector3( 0, 0, 0 );
     this.camera.lookAt( this.cameraTarget );
 
     // Scene
-    this.scene.fog = new THREE.Fog( this.fogColor, 100, 900 );
+    this.scene = new THREE.Scene();
+    this.scene.fog = new THREE.Fog(this.fogColor, 100, 900);
+  }
 
+  addSlide(slide) {
+    this.slides.push(slide);
+    this.add(slide.group);
+  }
+
+  init(callback) {
     // Lights
     this.light = new THREE.AmbientLight( 0x202020 ); // soft white light
     this.add( this.light );
@@ -47,18 +53,29 @@ class Presentation {
     this.cube.position.set( 0, -200, -300 );
     this.add( this.cube );
     
-    callback();
+    async.each(this.slides, (slide, callback) => {
+      slide.init(callback);
+    }, callback);
   }
 
   add(object) {
     this.scene.add(object);
   }
 
+  /**
+   * Executed every render loop
+   */
   render() {
     this.cube.rotation.x += 0.01;
     this.cube.rotation.y += 0.01;
     TWEEN.update();
-    this.renderer.render( this.scene, this.camera );
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  resize(width, height) {
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
   }
 
 }
