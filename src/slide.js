@@ -40,7 +40,7 @@ class Slide {
   init(callback) {
     var loader = new THREE.FontLoader();
     loader.load(this.fontName, (font) => {
-      console.log('font loaded');
+      console.log(`font ${this.fontName} loaded`);
       this.font = font;
       callback();
     });
@@ -49,7 +49,7 @@ class Slide {
   next() {
     this.i = (this.i + 1) % 10;
     
-    if (this.i == 9) {
+    if (this.i == this.bullets.length) {
       // Move slide out
       let position = { x: 0, y: 0, z: 0 };
       let tween = new TWEEN.Tween(position).to({ x: 0, y: 2000, z:0 }, 2000);
@@ -58,6 +58,8 @@ class Slide {
         this.group.position.set(position.x, position.y, position.z);
       });
       tween.start();
+
+      return true; // next slide
     } else {
       // show next bullet
       let yy = this.y - 70 * this.i;
@@ -73,6 +75,8 @@ class Slide {
       });
       tween.start();
       this.group.add(textMesh);
+
+      return false; // stay on this slide
     }
   }
 

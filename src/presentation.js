@@ -2,10 +2,13 @@ const THREE = require('three');
 const TWEEN = require('tween');
 const async = require('async');
 
+const { Slide } = require('./slide');
+
 class Presentation {
 
-  constructor(width, height, { fogColor = 0x333333 }) {
+  constructor(width, height, { fogColor = 0x333333, slides = [] }) {
     this.slides = [];
+    this.currentSlide = 0;
     this.fogColor = fogColor;
 
     // Renderer
@@ -22,11 +25,23 @@ class Presentation {
     // Scene
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.Fog(this.fogColor, 100, 900);
+
+    for (let slideData of slides) {
+      let slide = new Slide(slideData);
+      this.addSlide(slide);
+    }
+
   }
 
   addSlide(slide) {
     this.slides.push(slide);
     this.add(slide.group);
+  }
+
+  next() {
+    if (this.slides[this.currentSlide].next()) {
+      this.currentSlide += 1;
+    }
   }
 
   init(callback) {
