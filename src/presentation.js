@@ -38,10 +38,29 @@ class Presentation {
     this.add(slide.group);
   }
 
+  get current() {
+    return this.slides[this.currentSlide];
+  }
+
   next() {
-    if (this.slides[this.currentSlide].next()) {
-      this.currentSlide += 1;
+    if (this.current.next() && (this.currentSlide + 1) < this.slides.length) {
+      // Move slide out
+      let position = { x: 0, y: 0, z: 0 };
+      let tween = new TWEEN.Tween(position).to({ x: 0, y: 1000, z:0 }, 1000);
+      tween.easing(TWEEN.Easing.Quadratic.In);
+      tween.onUpdate(() => {
+        this.current.group.position.set(position.x, position.y, position.z);
+      });
+      tween.onComplete(() => {
+        this.currentSlide += 1;
+        this.current.show();
+      });
+      tween.start();
     }
+  }
+
+  show() {
+    this.current.show();
   }
 
   init(callback) {
@@ -68,6 +87,7 @@ class Presentation {
     this.cube.position.set( 0, -200, -300 );
     this.add( this.cube );
     
+    // Initialize all slides
     async.each(this.slides, (slide, callback) => {
       slide.init(callback);
     }, callback);
