@@ -34,8 +34,9 @@ class Slide {
     this.fontName = font;
     this.color = color;
     this.group = new THREE.Group();
-    this.y = 60;
-    this.i = -1;
+    this.titleMesh = null;
+    this.bulletMeshs = [];
+    this.currentBullet = 0;
   }
 
   init(callback) {
@@ -49,26 +50,43 @@ class Slide {
 
   show() {
     // Show title
-    let textMesh = createText(this.title, this.font, 50, this.color);
-    let textGeo = textMesh.geometry;
-    let centerOffset = -0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
-    textMesh.position.set(centerOffset, 130, 0);
-    textMesh.material[0].transparent = true;
-    textMesh.material[1].transparent = true;
-    textMesh.material[0].opacity = 0.0;
-    textMesh.material[1].opacity = 0.0;
-    
+    let mesh = this.titleMesh;
+    if (!mesh) {
+      mesh = createText(this.title, this.font, 50, this.color);
+      let textGeo = mesh.geometry;
+      let centerOffset = -0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+      mesh.position.set(centerOffset, 130, 0);
+      mesh.material[0].transparent = true;
+      mesh.material[1].transparent = true;
+      mesh.material[0].opacity = 0.0;
+      mesh.material[1].opacity = 0.0;      
+    }
     // Fade title in
     let material = { opacity: 0.0 };
     let tween = new TWEEN.Tween(material);
     tween.to({ opacity: 1.0 }, 1000).start();
     tween.onUpdate(() => {
-      textMesh.material[0].opacity = material.opacity;
-      textMesh.material[1].opacity = material.opacity;
+      mesh.material[0].opacity = material.opacity;
+      mesh.material[1].opacity = material.opacity;
     });
     
-    this.group.add(textMesh);
-    this.titleMesh = textMesh;
+    this.group.add(mesh);
+    this.titleMesh = mesh;
+  }
+
+  hide() {
+    // Fade title out
+    let mesh = this.titleMesh;
+    let material = { opacity: 1.0 };
+    let tween = new TWEEN.Tween(material);
+    tween.to({ opacity: 0.0 }, 1000).start();
+    tween.onUpdate(() => {
+      mesh.material[0].opacity = material.opacity;
+      mesh.material[1].opacity = material.opacity;
+    });
+    tween.onComplete(() => {
+      this.group.remove(mesh);
+    });
   }
 
   /**
@@ -76,27 +94,50 @@ class Slide {
    * Presentation should move on to the next slide.
    */
   next() {
-    this.i += 1;
-    if (this.i >= this.bullets.length) {
+    if (this.currentBullet >= this.bullets.length) {
       return true; // next slide
     }
 
-    // Show next bullet
-    let yy = this.y - 70 * this.i;
-    let textMesh = createText(this.bullets[this.i], this.font, 40, this.color);
-    let textGeo = textMesh.geometry;
-    // Motion
-    let position = { x: -800, y: yy, z: 0 };
-    let centerOffset = -0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
-    let tween = new TWEEN.Tween(position).to({ x: centerOffset, y: yy, z: 0 }, 2000);
+    // Lookup mesh or create it
+    let mesh = this.bulletMeshs[this.currentBullet];
+    if (!mesh) {
+      mesh = createText(this.bullets[this.currentBullet], this.font, 40, this.color);
+      mesh.position.set(-1500, 60 - 70 * this.currentBullet, 0);
+      this.bulletMeshs.push(mesh);
+      this.group.add(mesh);      
+    }
+    // Move bullet point in
+    let position = { x: -1500, y: mesh.position.y, z: 0 };
+    let centerOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
+    let tween = new TWEEN.Tween(position).to({ x: centerOffset, y: mesh.position.y, z: 0 }, 2000);
     tween.easing(TWEEN.Easing.Quadratic.Out);
     tween.onUpdate(() => {
-      textMesh.position.set(position.x, position.y, position.z);
+      mesh.position.set(position.x, position.y, position.z);
     });
     tween.start();
-    this.group.add(textMesh);
 
+    this.currentBullet += 1;
     return false; // stay on this slide
+  }
+
+  prev() {
+    if (this.currentBullet <= 0) {
+      return true; // next slide
+    }
+    this.currentBullet -= 1;
+
+    // Move mesh out
+    let mesh = this.bulletMeshs[this.currentBullet];
+    let position = { x: mesh.position.x, y: mesh.position.y, z: mesh.position.z };
+    let centerOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
+    let tween = new TWEEN.Tween(position).to({ x: -1500, y: mesh.position.y, z: 0 }, 2000);
+    tween.easing(TWEEN.Easing.Quadratic.Out);
+    tween.onUpdate(() => {
+      mesh.position.set(position.x, position.y, position.z);
+    });
+    tween.start();
+
+    return false;
   }
 
 }

@@ -1,5 +1,4 @@
 const { Presentation } = require('./presentation');
-const { Slide } = require('./slide');
 
 let doc = {
   slides: [
@@ -38,7 +37,11 @@ presentation.init(() => {
 
   // Navigation
   window.addEventListener('keydown', function onKeydown(event) {
-    switch ( event.keyCode ) {
+    switch (event.keyCode) {
+      case 37:
+        presentation.prev();
+        return false;
+
       case 39:
         presentation.next();
         return false;

@@ -47,13 +47,29 @@ class Presentation {
       // Move slide out
       let position = { x: 0, y: 0, z: 0 };
       let tween = new TWEEN.Tween(position).to({ x: 0, y: 1000, z:0 }, 1000);
-      tween.easing(TWEEN.Easing.Quadratic.In);
+      tween.easing(TWEEN.Easing.Quadratic.Out);
       tween.onUpdate(() => {
         this.current.group.position.set(position.x, position.y, position.z);
       });
       tween.onComplete(() => {
         this.currentSlide += 1;
         this.current.show();
+      });
+      tween.start();
+    }
+  }
+
+  prev() {
+    if (this.current.prev() && this.currentSlide > 0) {
+      this.current.hide();
+      this.currentSlide -= 1;
+      // Move slide in
+      let position = { x: 0, y: 1000, z:0 };
+      let tween = new TWEEN.Tween(position).to({ x: 0, y: 0, z: 0 }, 1000);
+      tween.delay(1000);
+      tween.easing(TWEEN.Easing.Quadratic.In);
+      tween.onUpdate(() => {
+        this.current.group.position.set(position.x, position.y, position.z);
       });
       tween.start();
     }
