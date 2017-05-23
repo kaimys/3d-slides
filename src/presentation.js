@@ -2,7 +2,7 @@ const THREE = require('three');
 const TWEEN = require('tween');
 const async = require('async');
 
-const { Slide } = require('./slide');
+const { BulletSlide } = require('./slides/bullet-slide');
 
 class Presentation {
 
@@ -27,7 +27,7 @@ class Presentation {
     this.scene.fog = new THREE.Fog(this.fogColor, 100, 900);
 
     for (let slideData of slides) {
-      let slide = new Slide(slideData);
+      let slide = new BulletSlide(slideData);
       this.addSlide(slide);
     }
 
@@ -67,7 +67,7 @@ class Presentation {
       let position = { x: 0, y: 1000, z:0 };
       let tween = new TWEEN.Tween(position).to({ x: 0, y: 0, z: 0 }, 1000);
       tween.delay(1000);
-      tween.easing(TWEEN.Easing.Quadratic.In);
+      tween.easing(TWEEN.Easing.Quadratic.Out);
       tween.onUpdate(() => {
         this.current.group.position.set(position.x, position.y, position.z);
       });
