@@ -3,19 +3,26 @@ const { Presentation } = require('./presentation');
 let doc = {
   slides: [
     {
-      title: 'Helvetiker red',
+      type: 'bullets', title: 'Helvetiker red',
       bullets: ['Slide 1 bullet 1', 'Slide 1 bullet 2', 'Slide 1 bullet 3', 'Slide 1 bullet 4', 'Slide 1 bullet 5', 'Slide 1 bullet 6 '] 
     }, {
+      type: 'image', 
+      title: 'Schloss Heidelberg', 
+      image: '/slides/schloss-heidelberg.jpg'
+    }, {
+      type: 'bullets', 
       title: 'Droid Sans green',
       font: 'fonts/droid_sans_bold.typeface.json',
       color: 0x22ff22,
       bullets: ['Slide 2 bullet 1', 'Slide 2 bullet 2', 'Slide 2 bullet 3', 'Slide 2 bullet 4', 'Slide 2 bullet 5', 'Slide 2 bullet 6 ']
     }, { 
+      type: 'bullets', 
       title: 'Gentilis magenta',
       font: 'fonts/gentilis_bold.typeface.json',
       color: 0xff22ff,
       bullets: ['Slide 3 bullet 1', 'Slide 3 bullet 2', 'Slide 3 bullet 3', 'Slide 3 bullet 4', 'Slide 3 bullet 5', 'Slide 3 bullet 6 ']
     }, { 
+      type: 'bullets', 
       title: 'Optimer yellow',
       font: 'fonts/optimer_bold.typeface.json',
       color: 0xffff22,

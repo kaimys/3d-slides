@@ -11,6 +11,15 @@ class Slide {
     this.titleMesh = null;
   }
 
+  init(callback) {
+    var loader = new THREE.FontLoader();
+    loader.load(this.fontName, (font) => {
+      this.font = font;
+      console.log(`font ${this.fontName} loaded`);
+      callback();
+    });
+  }
+
   show() {
     // Show title
     let mesh = this.titleMesh;
@@ -52,6 +61,13 @@ class Slide {
     });
   }
 
+  next() {
+    return true;
+  }
+
+  prev() {
+    return true;
+  }
 
   createText(text, font, size, color) {
     var textGeo = new THREE.TextBufferGeometry( text , {

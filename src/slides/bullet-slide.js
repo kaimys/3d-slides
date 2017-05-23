@@ -12,15 +12,6 @@ class BulletSlide extends Slide {
     this.currentBullet = 0;
   }
 
-  init(callback) {
-    var loader = new THREE.FontLoader();
-    loader.load(this.fontName, (font) => {
-      console.log(`font ${this.fontName} loaded`);
-      this.font = font;
-      callback();
-    });
-  }
-
   /**
    * next() returns true if there were no more bullets to show. This means the 
    * Presentation should move on to the next slide.

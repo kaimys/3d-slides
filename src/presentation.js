@@ -2,7 +2,7 @@ const THREE = require('three');
 const TWEEN = require('tween');
 const async = require('async');
 
-const { BulletSlide } = require('./slides/bullet-slide');
+const { BulletSlide, ImageSlide } = require('./slides/slides');
 
 class Presentation {
 
@@ -27,8 +27,14 @@ class Presentation {
     this.scene.fog = new THREE.Fog(this.fogColor, 100, 900);
 
     for (let slideData of slides) {
-      let slide = new BulletSlide(slideData);
-      this.addSlide(slide);
+      switch (slideData.type) {
+        case 'bullets':
+          this.addSlide(new BulletSlide(slideData));
+          break;
+        case 'image':
+          this.addSlide(new ImageSlide(slideData));
+          break;
+      }
     }
 
   }
