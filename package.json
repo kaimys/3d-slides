@@ -15,6 +15,8 @@
     "async": "^2.4.0",
     "browserify": "^14.3.0",
     "express": "^4.15.2",
+    "parse-svg-path": "^0.1.2",
+    "svg-path-contours": "^2.0.0",
     "three": "^0.85.2",
     "tween": "^0.9.0",
     "watchify": "^3.9.0"

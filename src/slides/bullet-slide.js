@@ -52,7 +52,6 @@ class BulletSlide extends Slide {
     // Move mesh out
     let mesh = this.bulletMeshs[this.currentBullet];
     let position = { x: mesh.position.x, y: mesh.position.y, z: mesh.position.z };
-    let centerOffset = -0.5 * ( mesh.geometry.boundingBox.max.x - mesh.geometry.boundingBox.min.x );
     let tween = new TWEEN.Tween(position).to({ x: -1500, y: mesh.position.y, z: 0 }, 2000);
     tween.easing(TWEEN.Easing.Quadratic.Out);
     tween.onUpdate(() => {
