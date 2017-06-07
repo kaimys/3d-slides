@@ -2,10 +2,7 @@ const THREE = require('three');
 const TWEEN = require('tween');
 const async = require('async');
 
-const parse = require('parse-svg-path');
-const contours = require('svg-path-contours');
-
-const { BulletSlide, ImageSlide } = require('./slides/slides');
+const { BulletSlide, ImageSlide, SvgSlide } = require('./slides/slides');
 
 class Presentation {
 
@@ -36,6 +33,9 @@ class Presentation {
           break;
         case 'image':
           this.addSlide(new ImageSlide(slideData));
+          break;
+        case 'svg':
+          this.addSlide(new SvgSlide(slideData));
           break;
       }
     }
@@ -106,41 +106,11 @@ class Presentation {
     this.add( this.dirLight );
 
     // Cube
-    //let geometry = new THREE.BoxGeometry( 350, 350, 350 );
+    let geometry = new THREE.BoxGeometry( 350, 350, 350 );
     let material = new THREE.MeshPhongMaterial( { color: 0x1188ff, shading: THREE.FlatShading } );
-    //this.cube = new THREE.Mesh( geometry, material );
-    //this.cube.position.set( 0, -200, -300 );
-    //this.add( this.cube );
-
-    // SVG
-    let svgPath = 'M17,1H3C1.9,1,1,1.9,1,3v14c0,1.101,0.9,2,2,2h7v-7H8V9.525h2V7.475c0-2.164,1.212-3.684,3.766-3.684l1.803,0.002v2.605h-1.197C13.378,6.398,13,7.144,13,7.836v1.69h2.568L15,12h-2v7h4c1.1,0,2-0.899,2-2V3C19,1.9,18.1,1,17,1z';
-    let material3d = new THREE.MeshPhongMaterial({color: 0x1188ff, shading: THREE.SmoothShading});
-    let points = contours(parse(svgPath))[0];
-    let contShape = new THREE.Shape();
-    contShape.autoClose = true;
-    let p = points[points.length - 1];
-    contShape.moveTo(p[0], p[1]);
-    for (p of points) {
-      contShape.lineTo(p[0], p[1]);
-    }
-    let contourGeo = new THREE.ExtrudeGeometry(contShape, {
-      steps: 1,
-      amount: 2,
-      bevelEnabled: true,
-      bevelThickness: 0.2,
-      bevelSize: 0.2,
-      bevelSegments: 1
-    });
-    contourGeo.computeBoundingBox();
-    contourGeo.computeVertexNormals();
-    let bb = contourGeo.boundingBox;
-    contourGeo.translate(-0.5 * (bb.max.x - bb.min.x), -0.5 * (bb.max.y - bb.min.y), 0);
-    contourGeo.scale(20, 20, 20);
-    contourGeo.rotateX(Math.PI);
-    this.cube = new THREE.Mesh(contourGeo, [material, material3d]);
-    this.cube.position.set(0, -200, -300);
-
-    this.add(this.cube);
+    this.cube = new THREE.Mesh( geometry, material );
+    this.cube.position.set( 0, -200, -300 );
+    this.add( this.cube );
     
     // Initialize all slides
     async.each(this.slides, (slide, callback) => {
