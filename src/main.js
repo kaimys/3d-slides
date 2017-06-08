@@ -1,6 +1,26 @@
 const { Presentation } = require('./presentation');
 
 let doc = {
+
+  fogColor: 0x000000,
+
+  cubeTexture: {
+    basePath: 'img/cubemap/skybox/',
+    sides: ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg']
+    /* Some cubemaps from THREE.js examples
+    basePath: 'https://threejs.org/examples/textures/cube/MilkyWay/',
+    sides: ['dark-s_px.jpg', 'dark-s_nx.jpg', 'dark-s_py.jpg', 'dark-s_ny.jpg', 'dark-s_pz.jpg', 'dark-s_nz.jpg'] 
+    basePath: 'https://threejs.org/examples/textures/cube/SwedishRoyalCastle/',
+    sides: ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'] 
+    basePath: 'https://threejs.org/examples/textures/cube/Bridge2/',
+    sides: ['posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg'] 
+    basePath: 'https://threejs.org/examples/textures/cube/Park3Med/',
+    sides: ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'] 
+    basePath: 'https://threejs.org/examples/textures/cube/pisa/',
+    sides: ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']
+    */
+  },
+
   slides: [
     {
       type: 'svg',
@@ -60,6 +80,7 @@ let doc = {
       bullets: ['Slide 4 bullet 1', 'Slide 4 bullet 2', 'Slide 4 bullet 3', 'Slide 4 bullet 4', 'Slide 4 bullet 5', 'Slide 4 bullet 6 ']
     }
   ]
+
 };
 
 let presentation = new Presentation(window.innerWidth, window.innerHeight, doc);

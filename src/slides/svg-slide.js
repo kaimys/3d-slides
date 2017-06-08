@@ -54,7 +54,7 @@ class SvgSlide extends Slide {
         new THREE.MeshPhongMaterial({ color: this.color, shading: THREE.SmoothShading })
       ];
       this.svg = new THREE.Mesh(contourGeo, material);
-      this.svg.position.set(0, -60, 0);
+      this.svg.position.set(0, -60, 40);
     }
     this.group.add( this.svg );
   }

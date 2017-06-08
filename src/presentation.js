@@ -6,15 +6,16 @@ const { BulletSlide, ImageSlide, SvgSlide } = require('./slides/slides');
 
 class Presentation {
 
-  constructor(width, height, { fogColor = 0x333333, slides = [] }) {
+  constructor(width, height, { fogColor, cubeTexture, slides = [] }) {
     this.slides = [];
     this.currentSlide = 0;
     this.fogColor = fogColor;
+    this.cubeTexture = cubeTexture;
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
-    this.renderer.setClearColor( this.fogColor );
 
     // Camera
     this.camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
@@ -24,7 +25,12 @@ class Presentation {
 
     // Scene
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog(this.fogColor, 100, 900);
+    
+    // Fog
+    if (this.fogColor) {
+      this.scene.fog = new THREE.Fog(this.fogColor, 100, 900);
+      this.renderer.setClearColor(this.fogColor);
+    }
 
     for (let slideData of slides) {
       switch (slideData.type) {
@@ -89,6 +95,20 @@ class Presentation {
   }
 
   init(callback) {
+    // Cube texture background
+    if (this.cubeTexture) {
+      let loader = new THREE.CubeTextureLoader();
+      loader.crossOrigin = true;
+      loader.setPath(this.cubeTexture.basePath); 
+      loader.load(this.cubeTexture.sides, (text) => {
+        text.format = THREE.RGBFormat;
+        this.scene.background = text;
+        console.log('CubeTexture backgroud loaded');
+      }, undefined, (err) => {
+        console.log('CubeTexture backgroud error' + err.message);
+      });
+    }
+
     // Lights
     this.light = new THREE.AmbientLight( 0x202020 ); // soft white light
     this.add( this.light );
